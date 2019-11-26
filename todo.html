@@ -13,40 +13,15 @@
 <body>
     <div class="container">
         <h1 class="title">todos</h1>
-        <div class="todo">
+        <div class="todo" id="todo">
             <header class="header">
-                <input class="newToDo" type="text" placeholder="What needs to be done?">
+                <input class="newToDo" id="newToDo" type="text" placeholder="What needs to be done?">
             </header>
-            <section class="main">
-<!--                <input type="checkbox" id="toggle-all" class="toggle-all">-->
-<!--                <label for="toggle-all"></label>-->
-                <ul class="todo-list">
-                    <li class="todoItem">
-                        <div class="todoItem__wrap">
-                            <input class="toggle" id="toggle1" type="checkbox">
-                            <label for="toggle" class="desTodo">abc</label>
-                            <button class="btn btn--close"><i class="fas fa-times fa-lg"></i></button>
-                        </div>
-                    </li>
-                    <li class="todoItem">
-                        <div class="todoItem__wrap">
-                            <input class="toggle" id="toggle2" type="checkbox">
-                            <label for="toggle" class="desTodo">abc</label>
-                            <button class="btn btn--close"><i class="fas fa-times fa-lg"></i></button>
-                        </div>
-                    </li>
-                </ul>
+            <section class="main" id="main">
+                <ul class="todo-list" id="todo-list"></ul>
             </section>
-            <footer class="footer">
-                <span class="todo-count">0 item left</span>
-                <ul class="filter">
-                    <li class="filter__item">All</li>
-                    <li class="filter__item">Active</li>
-                    <li class="filter__item">Completed</li>
-                </ul>
-                <button class="btn">Clear completed</button>
-            </footer>
         </div>
     </div>
+    <script src="todo.js"></script>
 </body>
 </html>
