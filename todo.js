@@ -2,22 +2,25 @@
 let input = document.getElementById('newToDo');
 let todo = document.getElementById('todo')
 let listToDo = document.getElementById('todo-list');
-
 // Event
 input.addEventListener('keyup', addNewToDo)
+
 // init
-let count = 0; // count todo list
+let count = 0;     // count to do list
+let completed = 0; // count to do list completed
+let active = 0;    // count to do list active
 
 // Function
 function addNewToDo(e) {
     let enter = 13  // Enter have ascii 13
     if(e.keyCode === enter) {
         count++;
-        renderNewToDo(count);
-        if(count == 1) {
+        renderNewToDo(count); // render new todo
+        if(count == 1) {      // render when the first new todo is added
             renderCheckBoxAll();
+            renderFooter();
         }
-        renderFooter(count);
+        countItemLeft();       // count item left
     }
 }
 
@@ -26,18 +29,19 @@ function renderNewToDo(count) {
                         <div class="todoItem__wrap">
                             <input class="toggle" type="checkbox" name="check" id="toggle${count}">
                             <label class="desTodo">${input.value}</label>
-                            <button class="btn btn--close"></button>
+                            <button class="button button--close" id="delete${count}"></button>
                         </div>
                     </li>`;
     listToDo.insertAdjacentHTML('beforeend', newItem);
     input.value = '';
     // Event when click checkbox
     clickCheckTodo();
+    clickDelTodo();
 }
 
 function renderCheckBoxAll() {
-    let content = `<input type="checkbox" id="toggle-all" class="toggle-all">
-                <label for="toggle-all"></label>`;
+    let content = `<div id="checkAll"><input type="checkbox" id="toggle-all" class="toggle-all">
+    <label for="toggle-all"></label></div>`;
     listToDo.insertAdjacentHTML('beforebegin', content);
     // event when check all
     clickCheckAll();
@@ -50,30 +54,97 @@ function clickCheckAll() {
         length = checkboxes.length;
         for(let i = 0; i < length; i++) {
             checkboxes[i].checked = this.checked;
+            addEffectWhenCheck(checkboxes[i]);
         }
+
+        countItemLeft()
     });
 }
 
 function clickCheckTodo() {
-    let completed = 0, active = 0;
-    document.getElementById(`toggle${count}`).addEventListener('click', function () {
-        if(this.checked) {
-            this.parentNode.parentNode.classList.add('completed');  // Add effect when click
-            completed++;  // count completed
-        } else {
-            this.parentNode.parentNode.classList.remove('completed');
-        }
-        // Check All
+    let id = count;
+    document.getElementById(`toggle${id}`).addEventListener('click', function () {
+        // Add effect when check
+        addEffectWhenCheck(this);
+
+        // Check all to do checked
         if(isAllBoxChecked()) {
             document.getElementById('toggle-all').checked = true;
         } else {
             document.getElementById('toggle-all').checked = false;
         }
 
-        // Count todo item left
-        active = count - completed;
-        document.getElementById('todo-count').innerHTML = `${active} item left`
+        // Add button clear if exist to do completed
+        addBtnClearCompleted();
+
+        // Count to do item left
+        countItemLeft();
     })
+}
+
+function addEffectWhenCheck(el) {
+    if(el.checked) {
+
+        el.parentNode.parentNode.classList.add('completed');  // Add effect when click
+        completed++;  // count completed
+    } else {
+        el.parentNode.parentNode.classList.remove('completed');
+        completed--;
+    }
+}
+
+function addBtnClearCompleted() {
+    let btnClear = document.getElementById('btnClearCompleted');
+    if(completed == 1 && !checkElementExist(btnClear)) {
+        let content = `<button id="btnClearCompleted" class="button button--clear">Clear completed</button>`;
+        document.getElementById('footer').insertAdjacentHTML('beforeend', content);
+        document.getElementById('btnClearCompleted').addEventListener('click', deleteTodoCompleted);
+    }
+    if(completed == 0) {
+        btnClear.remove();
+    }
+}
+
+function checkElementExist(element) {
+    //If it isn't "undefined" and it isn't "null", then it exists.
+    if(typeof(element) != 'undefined' && element != null){
+        return true;
+    } else return false;
+}
+
+function deleteTodoCompleted() {
+    let todos = document.querySelectorAll(`[class*="completed"]`);
+    todos.forEach(item => {
+        item.remove();
+        count--;
+    })
+    completed = 0;
+    removeFooterAndCheckAll();
+}
+
+function countItemLeft() {
+    console.log('completed',completed);
+    active = count - completed;
+    document.getElementById('todo-count').innerHTML = `${active} item left`;
+}
+
+function clickDelTodo() {
+    let id = count;
+    document.getElementById(`delete${id}`).addEventListener('click', function () {
+        if(document.getElementById(`toggle${id}`).checked) completed--;
+        count--;
+        this.parentElement.parentElement.remove();
+        countItemLeft();
+        removeFooterAndCheckAll();
+
+    })
+}
+
+function removeFooterAndCheckAll() {
+    if(count == 0) {
+        document.getElementById('footer').remove();
+        document.getElementById('checkAll').remove();
+    }
 }
 
 function isAllBoxChecked() {
@@ -86,21 +157,17 @@ function isAllBoxChecked() {
         else return false;
 }
 
-function renderFooter(count) {
-    let footer = `<footer class="footer">
+function renderFooter() {
+    let footer = `<footer class="footer" id="footer">
                 <span id="todo-count"></span>
                 <ul class="filter">
                     <li><a href="#/" id="all">All</a></li><span></span>
                     <li><a href="#/active" id="active">Active</a><span></span>
                     <li><a href="#/completed" id="completed">Completed</a></li><span></span>
                 </ul>
-                <button class="btn">Clear completed</button>
             </footer>`;
-    if(count == 1) {
         todo.insertAdjacentHTML('beforeend', footer);
-    }
-    let countToDo = document.getElementById('todo-count');
-    countToDo.innerHTML = `${count} item left`;
+
     // declare for filter
     let all = document.getElementById('all');
     let active = document.getElementById('active');
