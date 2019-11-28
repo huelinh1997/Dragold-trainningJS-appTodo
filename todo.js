@@ -51,12 +51,13 @@ function clickCheckAll() {
     let checkAll = document.getElementById('toggle-all');
     checkAll.addEventListener('click', function () {
         let checkboxes = document.getElementsByName('check');
+        let completedBefore = completed;
         length = checkboxes.length;
         for(let i = 0; i < length; i++) {
             checkboxes[i].checked = this.checked;
-            addEffectWhenCheck(checkboxes[i]);
+            addEffectAndCountCompletedWhenCheck(checkboxes[i]);
         }
-
+        if(completedBefore !== 0 && isAllBoxChecked()) {completed = completed - completedBefore;}
         countItemLeft()
     });
 }
@@ -65,7 +66,7 @@ function clickCheckTodo() {
     let id = count;
     document.getElementById(`toggle${id}`).addEventListener('click', function () {
         // Add effect when check
-        addEffectWhenCheck(this);
+        addEffectAndCountCompletedWhenCheck(this);
 
         // Check all to do checked
         if(isAllBoxChecked()) {
@@ -82,9 +83,8 @@ function clickCheckTodo() {
     })
 }
 
-function addEffectWhenCheck(el) {
+function addEffectAndCountCompletedWhenCheck(el) {
     if(el.checked) {
-
         el.parentNode.parentNode.classList.add('completed');  // Add effect when click
         completed++;  // count completed
     } else {
