@@ -1,9 +1,9 @@
 // Declare
-let input = document.getElementById('newToDo');
-let todo = document.getElementById('todo')
-let listToDo = document.getElementById('todo-list');
+let elInput = document.getElementById('newToDo');
+let elTodo = document.getElementById('todo')
+let elListToDo = document.getElementById('todo-list');
 // Event
-input.addEventListener('keyup', addNewToDo)
+elInput.addEventListener('keyup', addNewToDo)
 
 // init
 let count = 0;     // count to do list
@@ -28,12 +28,12 @@ function renderNewToDo(count) {
     let newItem = `<li>
                         <div class="todoItem__wrap">
                             <input class="toggle" type="checkbox" name="check" id="toggle${count}">
-                            <label class="desTodo">${input.value}</label>
+                            <label class="desTodo">${elInput.value}</label>
                             <button class="button button--close" id="delete${count}"></button>
                         </div>
                     </li>`;
-    listToDo.insertAdjacentHTML('beforeend', newItem);
-    input.value = '';
+    elListToDo.insertAdjacentHTML('beforeend', newItem);
+    elInput.value = '';
     // Event when click checkbox
     clickCheckTodo();
     clickDelTodo();
@@ -42,7 +42,7 @@ function renderNewToDo(count) {
 function renderCheckBoxAll() {
     let content = `<div id="checkAll"><input type="checkbox" id="toggle-all" class="toggle-all">
     <label for="toggle-all"></label></div>`;
-    listToDo.insertAdjacentHTML('beforebegin', content);
+    elListToDo.insertAdjacentHTML('beforebegin', content);
     // event when check all
     clickCheckAll();
 }
@@ -166,7 +166,7 @@ function renderFooter() {
                     <li><a href="#/completed" id="completed">Completed</a></li><span></span>
                 </ul>
             </footer>`;
-        todo.insertAdjacentHTML('beforeend', footer);
+    elTodo.insertAdjacentHTML('beforeend', footer);
 
     // declare for filter
     let all = document.getElementById('all');
